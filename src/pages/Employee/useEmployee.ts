@@ -14,14 +14,17 @@ export default function useEmployee() {
         totalCount: 0,
         hasNextPage: false,
         hasPreviousPage: false,
-        
+
     });
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response: PagedList<UserResponse> = await categoriasService.getListAsync({ page, pageSize: users.pageSize });
+            const response: PagedList<UserResponse> = await categoriasService.getListAsync({
+                page,
+                pageSize: users.pageSize
+            });
             setUsers(response);
             setTotalPages(Math.ceil(response.totalCount / response.pageSize));
         };
@@ -30,14 +33,14 @@ export default function useEmployee() {
 
     const navigate = useNavigate();
 
-    const handleNext = () => setPage((prevPage) => Math.min(prevPage + 1, totalPages - 1));
-    const handlePrevious = () => setPage((prevPage) => Math.max(prevPage - 1, 0));
+    const handleNext = () => setPage(page + 1);
+    const handlePrevious = () => setPage(page - 1);
 
     const handleAddNew = (e: any) => {
         navigate("/employee/add");
     };
 
-    const handleEdit = (userId:  number) => {
+    const handleEdit = (userId: number) => {
         navigate("/employee/edit/" + userId);
     };
 
@@ -45,6 +48,6 @@ export default function useEmployee() {
         userService.deleteUserAsync(userId);
         navigate("/employee/manage");
     };
-    
+
     return {users, handleAddNew, handleEdit, handleDelete, page, totalPages, handlePrevious, handleNext};
 }
