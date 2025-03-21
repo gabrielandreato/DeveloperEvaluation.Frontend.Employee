@@ -12,23 +12,27 @@ const  categoriasService = {
         return resposta.data;
     },
 
-    getList:  async function getList(params: GetListUserRequest): Promise<PagedList<UserResponse>> {
+    getListAsync:  async function getList(params: GetListUserRequest): Promise<PagedList<UserResponse>> {
         const queryString = toQueryString(params);
         const response = await instance.get(`/User/List?${queryString}`);
         return response.data;
     },
-    create : async (user: CreateUserRequest) => {
+    createAsync : async (user: CreateUserRequest) => {
         const response = await instance.post('/User/', user);
         return response.data;
     },
-    get:  async function get(id: number): Promise<UserResponse> {
+    getAsync:  async function getAsync(id: number): Promise<UserResponse> {
         const response = await instance.get(`/User/${id}`);
         return response.data;
     },
-    update: async function update(id: string, user: CreateUserRequest) {
+    updateAsync: async function updateAsync(id: string, user: CreateUserRequest) {
         const response = await instance.put('/User/' + id, user);
         return response.data;
-    }
+    },
+    deleteUserAsync: async function deleteUser (id: number) {
+        const response = await instance.delete(`/User/${id}`);
+        return response.data;
+    },
 }
 
 function toQueryString(params: Record<string, any>): string {

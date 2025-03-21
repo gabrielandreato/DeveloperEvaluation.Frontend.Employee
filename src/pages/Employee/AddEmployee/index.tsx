@@ -32,7 +32,7 @@ export default function AddEmployee() {
         const fetchUser = async () => {
             if (id) {
                 try {
-                    const userData = await UserService.get(parseInt(id));
+                    const userData = await UserService.getAsync(parseInt(id));
                     if (userData) {
                         setForm({
                             userName: userData.userName,
@@ -42,7 +42,7 @@ export default function AddEmployee() {
                             rePassword: '',
                             dateOfBirth: userData.dateOfBirth,
                             email: userData.email,
-                            role: userData.role,
+                            role: Number(userData.role),
                             managerId: userData.managerId,
                             phoneNumbers: userData.phoneNumbers,
                             documentNumber: userData.documentNumber
@@ -62,7 +62,7 @@ export default function AddEmployee() {
         const { name, value } = e.target;
         setForm(prevState => ({
             ...prevState,
-            [name]: Number(value)
+            [name]: value
         }));
     };
 
@@ -93,11 +93,11 @@ export default function AddEmployee() {
         event.preventDefault();
         try {
             if (id === null || id === undefined) {
-                await UserService.create(form);
+                await UserService.createAsync(form);
                 navigate('/employee/manage');
             }
             else {
-                await UserService.update(id!, form);
+                await UserService.updateAsync(id!, form);
                 navigate('/employee/manage');
             }
         } catch (error) {
@@ -200,7 +200,7 @@ export default function AddEmployee() {
                         id="dateOfBirth"
                         name="dateOfBirth"
                         value={form.dateOfBirth.split('T')[0]}
-                        onChange={(e) => setForm({...form})}
+                        onChange={(e) => setForm({...form, dateOfBirth: e.target.value})}
                         className={styles.formControl} />
                 </div>
 
@@ -210,7 +210,7 @@ export default function AddEmployee() {
                         id="role"
                         name="role"
                         value={form.role}
-                        onChange={handleChange}
+                        onChange={(e) => setForm({...form, role: Number(e.target.value)})}
                         className={styles.formControl}
                         required>
                         <option value="1">Employee</option>

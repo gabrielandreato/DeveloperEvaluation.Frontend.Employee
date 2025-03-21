@@ -3,7 +3,8 @@ import categoriasService from '../../services/userService';
 import { UserResponse } from "../../interfaces/response/UserResponse";
 import { PagedList } from "../../interfaces/types/PagedList";
 import styles from './ManageEmployees.module.scss';
-import {useNavigate} from "react-router-dom"; // Importa o CSS module
+import {useNavigate} from "react-router-dom";
+import userService from "../../services/userService"; // Importa o CSS module
 
 export default function ManageEmployees() {
     const [users, setUsers] = useState<UserResponse[]>([]);
@@ -12,7 +13,7 @@ export default function ManageEmployees() {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response: PagedList<UserResponse> = await categoriasService.getList({ page });
+            const response: PagedList<UserResponse> = await categoriasService.getListAsync({ page });
             setUsers(response.items);
             setTotalPages(Math.ceil(response.totalCount / response.pageSize));
         };
@@ -33,8 +34,8 @@ export default function ManageEmployees() {
     };
 
     const handleDelete = (userId: number) => {
-        
-        console.log('Delete user', userId);
+        userService.deleteUserAsync(userId);
+        navigate("/employee/manage");
     };
 
     return (
