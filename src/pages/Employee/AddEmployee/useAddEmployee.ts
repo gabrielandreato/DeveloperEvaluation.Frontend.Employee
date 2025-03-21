@@ -3,6 +3,8 @@ import {CreateUserRequest} from "../../../interfaces/request/CreateUserRequest";
 import {useNavigate, useParams} from "react-router-dom";
 import UserService from "../../../services/userService";
 import {CreatePhoneNumberRequest} from "../../../interfaces/request/CreatePhoneNumberRequest";
+import {UserResponse} from "../../../interfaces/response/UserResponse";
+import userService from "../../../services/userService";
 
 export function useAddEmployee() {
     const [form, setForm] = useState<CreateUserRequest>({
@@ -23,7 +25,6 @@ export function useAddEmployee() {
     const navigate = useNavigate();
 
     const [newPhoneNumber, setNewPhoneNumber] = useState('');
-    const [newPhoneType, setNewPhoneType] = useState('');
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -74,7 +75,6 @@ export function useAddEmployee() {
             }));
 
             setNewPhoneNumber('');
-            setNewPhoneType('');
         }
     };
 
@@ -100,6 +100,21 @@ export function useAddEmployee() {
         }
     };
 
+    const [managers, setManagers] = useState<UserResponse[]>([]);
+
+    useEffect(() => {
+        const fetchManagers = async () => {
+            try {
+                const response = await userService.getListAsync({})
+                setManagers(response.items);
+            } catch (e) {
+                
+            }
+        }
+        
+        fetchManagers();
+    }, [])
+    
     return {
         form,
         setForm,
@@ -109,7 +124,8 @@ export function useAddEmployee() {
         handleSubmit,
         id,
         newPhoneNumber,
-        setNewPhoneNumber
+        setNewPhoneNumber,
+        managers
     };
 
 }

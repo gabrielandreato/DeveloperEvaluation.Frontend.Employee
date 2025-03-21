@@ -11,7 +11,8 @@ export default function AddEmployee() {
         handleSubmit,
         id,
         newPhoneNumber,
-        setNewPhoneNumber
+        setNewPhoneNumber,
+         managers
     } = useAddEmployee();
 
     return (
@@ -126,6 +127,22 @@ export default function AddEmployee() {
                         <option value="2">Leader</option>
                         <option value="3">Director</option>
                         <option value="4">Admin</option>
+                    </select>
+                </div>
+
+                <div className={styles.formGroup}>
+                    <label htmlFor="role">Role</label>
+                    <select
+                        id="role"
+                        name="role"
+                        value={form.managerId}
+                        onChange={(e) => setForm({...form, managerId: Number(e.target.value)})}
+                        className={styles.formControl}
+                        required>
+                        {managers.map(x => 
+                        (<option value={x.id}>{x.firstName + ' ' + x.lastName}</option>)
+                        )}
+                        
                     </select>
                 </div>
 
