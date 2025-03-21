@@ -1,10 +1,11 @@
-﻿import { useState } from 'react';
+﻿import {useState, useEffect, use} from 'react';
 import styles from './AddEmployee.module.scss';
-import {RoleEnum} from "../../../common/constants/RoleEnum";
-import {CreateUserRequest} from "../../../interfaces/request/CreateUserRequest";
-import {CreatePhoneNumberRequest} from "../../../interfaces/request/CreatePhoneNumberRequest";
+import { RoleEnum } from "../../../common/constants/RoleEnum";
+import { CreateUserRequest } from "../../../interfaces/request/CreateUserRequest";
+import { CreatePhoneNumberRequest } from "../../../interfaces/request/CreatePhoneNumberRequest";
 import UserService from "../../../services/userService";
-import {useNavigate} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import {getRoleEnumValue} from "../../../functions/enumFunctions";
 
 export default function AddEmployee() {
     const [form, setForm] = useState<CreateUserRequest>({
@@ -15,31 +16,55 @@ export default function AddEmployee() {
         lastName: '',
         email: '',
         documentNumber: '',
-        phoneNumbers: [], 
+        phoneNumbers: [],
         managerId: undefined,
-        dateOfBirth: new Date(),
-        role: 1, 
+        dateOfBirth: '',
+        role: 1,
     });
-    
+
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [newPhoneNumber, setNewPhoneNumber] = useState('');
+    const [newPhoneType, setNewPhoneType] = useState('');
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            if (id) {
+                try {
+                    const userData = await UserService.get(parseInt(id));
+                    if (userData) {
+                        setForm({
+                            userName: userData.userName,
+                            firstName: userData.firstName,
+                            lastName: userData.lastName,
+                            password: '',
+                            rePassword: '',
+                            dateOfBirth: userData.dateOfBirth,
+                            email: userData.email,
+                            role: userData.role,
+                            managerId: userData.managerId,
+                            phoneNumbers: userData.phoneNumbers,
+                            documentNumber: userData.documentNumber
+                        });
+                    }
+                } catch (error) {
+                    console.error("Failed to fetch user data:", error);
+                }
+            }
+        };
+        fetchUser();
+    }, [id]);
+
+    
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setForm(prevState => ({
             ...prevState,
-            [name]: value
+            [name]: Number(value)
         }));
     };
-
-    const handlePhoneNumberChange = (index: number, value: string) => {
-        const newPhoneNumbers = [...form.phoneNumbers];
-        newPhoneNumbers[index].number = value;
-        setForm({ ...form, phoneNumbers: newPhoneNumbers });
-    };
-
-    const [newPhoneType, setNewPhoneType] = useState('');
 
     const handleAddPhoneNumber = () => {
         if (newPhoneNumber.trim() !== "") {
@@ -67,8 +92,14 @@ export default function AddEmployee() {
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {
-            const response = await UserService.create(form);
-            navigate('/manage-employees')
+            if (id === null || id === undefined) {
+                await UserService.create(form);
+                navigate('/employee/manage');
+            }
+            else {
+                await UserService.update(id!, form);
+                navigate('/employee/manage');
+            }
         } catch (error) {
             console.error("Error creating user:", error);
         }
@@ -76,7 +107,7 @@ export default function AddEmployee() {
 
     return (
         <div className={`${styles.container}`}>
-            <h2 className={styles.mb4}>Add New Employee</h2>
+            <h2 className={styles.mb4}>{id ? 'Edit Employee' : 'Add New Employee'}</h2>
             <form onSubmit={handleSubmit}>
                 <div className={styles.formGroup}>
                     <label htmlFor="userName">User Name</label>
@@ -168,8 +199,8 @@ export default function AddEmployee() {
                         type="date"
                         id="dateOfBirth"
                         name="dateOfBirth"
-                        value={form.dateOfBirth.toISOString().split('T')[0]}
-                        onChange={(e) => setForm({...form, dateOfBirth: new Date(e.target.value)})}
+                        value={form.dateOfBirth.split('T')[0]}
+                        onChange={(e) => setForm({...form})}
                         className={styles.formControl} />
                 </div>
 
@@ -188,7 +219,7 @@ export default function AddEmployee() {
                         <option value="4">Admin</option>
                     </select>
                 </div>
-                
+
                 <div className={styles.formGroup}>
                     <label htmlFor="newPhoneNumber">Add Phone Number</label>
                     <input
@@ -213,17 +244,17 @@ export default function AddEmployee() {
                         <tbody>
                         {form.phoneNumbers.map((phoneNumber, index) => (
                             <tr key={index}>
+                                <td>{phoneNumber.number}</td>
                                 <td>
                                     <button type="button" onClick={() => handleRemovePhoneNumber(index)} className={`${styles.btn} ${styles.btnDanger}`}>Delete</button>
                                 </td>
-                                <td>{phoneNumber.number}</td>
                             </tr>
                         ))}
                         </tbody>
                     </table>
                 )}
-                
-                <button type="submit" className={styles.btn}>Add Employee</button>
+
+                <button type="submit" className={styles.btn}>{id ? 'Update Employee' : 'Add Employee'}</button>
             </form>
         </div>
     );

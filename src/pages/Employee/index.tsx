@@ -29,8 +29,7 @@ export default function ManageEmployees() {
     };
 
     const handleEdit = (userId:  number) => {
-        
-        console.log('Edit user', userId);
+        navigate("/employee/edit/" + userId);  
     };
 
     const handleDelete = (userId: number) => {

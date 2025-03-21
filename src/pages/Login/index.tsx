@@ -2,15 +2,14 @@
 import useLogin from "./useLogin";
 
 export default function Login() {
-    
-   const { onLogin,username, setUsername, password, setPassword} = useLogin();
+    const { onLogin, username, setUsername, password, setPassword } = useLogin();
 
     return (
-        <>
-            <div className={styles.container}>
-                <h2>Employee App</h2>
-                <form className={styles.form} onSubmit={onLogin}>
-                    <label htmlFor="username">User name:</label>
+        <div className={styles.container}>
+            <h2 className={styles.title}>Employee App</h2>
+            <form className={styles.form} onSubmit={onLogin}>
+                <div className={styles.formGroup}>
+                    <label htmlFor="username" className={styles.label}>User name:</label>
                     <input
                         className={styles.input}
                         id="username"
@@ -19,8 +18,10 @@ export default function Login() {
                         value={username}
                         onChange={e => setUsername(e.target.value)}
                     />
+                </div>
 
-                    <label className={styles.label} htmlFor="password">Password:</label>
+                <div className={styles.formGroup}>
+                    <label htmlFor="password" className={styles.label}>Password:</label>
                     <input
                         className={styles.input}
                         id="password"
@@ -29,10 +30,10 @@ export default function Login() {
                         value={password}
                         onChange={e => setPassword(e.target.value)}
                     />
+                </div>
 
-                    <button className={styles.button} type="submit">Login</button>
-                </form>
-            </div>
-        </>
+                <button className={styles.button} type="submit">Login</button>
+            </form>
+        </div>
     );
 }

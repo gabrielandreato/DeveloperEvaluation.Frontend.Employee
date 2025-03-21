@@ -11,7 +11,7 @@ export interface UserResponse {
     documentNumber: string;
     managerId?: number; 
     manager?: UserResponse;
-    dateOfBirth: Date;
-    role: string;  
+    dateOfBirth: string;
+    role: number;  
     phoneNumbers: PhoneNumberResponse[];
 }

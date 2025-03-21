@@ -22,6 +22,7 @@ export default function Router() {
                 <Route path="/employee" element={<PrivateRoute><DefaultPage /></PrivateRoute>}>
                     <Route path="manage" element={<ManageEmployees />} />
                     <Route path="add" element={<AddEmployee />} />
+                    <Route path="edit/:id"  element={<AddEmployee />} />
                 </Route>
             </Routes>
         </BrowserRouter>

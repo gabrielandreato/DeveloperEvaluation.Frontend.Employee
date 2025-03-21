@@ -14,12 +14,20 @@ const  categoriasService = {
 
     getList:  async function getList(params: GetListUserRequest): Promise<PagedList<UserResponse>> {
         const queryString = toQueryString(params);
-        const resposta = await instance.get(`/User/List?${queryString}`);
-        return resposta.data;
+        const response = await instance.get(`/User/List?${queryString}`);
+        return response.data;
     },
     create : async (user: CreateUserRequest) => {
-        const resposta = await instance.post('/User/', user);
-        return resposta.data;
+        const response = await instance.post('/User/', user);
+        return response.data;
+    },
+    get:  async function get(id: number): Promise<UserResponse> {
+        const response = await instance.get(`/User/${id}`);
+        return response.data;
+    },
+    update: async function update(id: string, user: CreateUserRequest) {
+        const response = await instance.put('/User/' + id, user);
+        return response.data;
     }
 }
 
