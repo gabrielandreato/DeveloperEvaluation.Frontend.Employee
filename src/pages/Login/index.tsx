@@ -1,24 +1,9 @@
-﻿import { useState } from 'react';
-import styles from './Login.module.scss';
-import userService from "../../services/userService";
+﻿import styles from './Login.module.scss';
+import useLogin from "./useLogin";
 
 export default function Login() {
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-
-    const onLogin = async (event: any) => {
-        event.preventDefault();
-        try {
-            const response = await userService.login({ userName: username, password });
-            
-            console.log(response);
-            
-            localStorage.setItem('authToken', response);
-            
-        } catch (error) {
-            console.error('Login failed', error);
-        }
-    };
+    
+   const { onLogin,username, setUsername, password, setPassword} = useLogin();
 
     return (
         <>
