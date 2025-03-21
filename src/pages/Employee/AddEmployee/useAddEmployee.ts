@@ -125,7 +125,8 @@ export function useAddEmployee() {
         id,
         newPhoneNumber,
         setNewPhoneNumber,
-        managers
+        managers,
+        navigate
     };
 
 }

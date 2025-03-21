@@ -12,7 +12,8 @@ export default function AddEmployee() {
         id,
         newPhoneNumber,
         setNewPhoneNumber,
-         managers
+         managers,
+        navigate
     } = useAddEmployee();
 
     return (
@@ -182,6 +183,7 @@ export default function AddEmployee() {
                     </table>
                 )}
 
+                <button onClick={() => navigate('/employee/manage')} className={styles.btnCancel}>Cancel</button>
                 <button type="submit" className={styles.btn}>{id ? 'Update Employee' : 'Add Employee'}</button>
             </form>
         </div>

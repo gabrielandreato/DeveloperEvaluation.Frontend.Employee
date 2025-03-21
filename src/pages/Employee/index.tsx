@@ -12,16 +12,16 @@ export default function ManageEmployees() {
             <table className={styles.table}>
                 <thead>
                 <tr>
+                    <th>Actions</th>
                     <th>ID</th>
                     <th>User Name</th>
                     <th>Email</th>
                     <th>First Name</th>
                     <th>Last Name</th>
-                    <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
-                {users.map((user) => (
+                {users.items.map((user) => (
                     <tr key={user.id}>
                         <td>
                             <button onClick={() => handleEdit(user.id)} className={styles.btn}>Edit</button>
@@ -39,10 +39,10 @@ export default function ManageEmployees() {
                 </tbody>
             </table>
             <div className={styles.dFlex}>
-                <button className={styles.btn} disabled={page <= 0} onClick={handlePrevious}>
+                <button className={styles.btn} disabled={!users.hasPreviousPage} onClick={handlePrevious}>
                     Previous
                 </button>
-                <button className={styles.btn} disabled={page >= totalPages - 1} onClick={handleNext}>
+                <button className={styles.btn} disabled={!users.hasNextPage} onClick={handleNext}>
                     Next
                 </button>
             </div>

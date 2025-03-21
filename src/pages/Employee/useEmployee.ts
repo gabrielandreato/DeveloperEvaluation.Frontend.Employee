@@ -7,14 +7,22 @@ import userService from "../../services/userService";
 
 export default function useEmployee() {
 
-    const [users, setUsers] = useState<UserResponse[]>([]);
-    const [page, setPage] = useState(0);
+    const [users, setUsers] = useState<PagedList<UserResponse>>({
+        page: 1,
+        items: [],
+        pageSize: 5,
+        totalCount: 0,
+        hasNextPage: false,
+        hasPreviousPage: false,
+        
+    });
+    const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response: PagedList<UserResponse> = await categoriasService.getListAsync({ page });
-            setUsers(response.items);
+            const response: PagedList<UserResponse> = await categoriasService.getListAsync({ page, pageSize: users.pageSize });
+            setUsers(response);
             setTotalPages(Math.ceil(response.totalCount / response.pageSize));
         };
         fetchUsers();
@@ -38,5 +46,5 @@ export default function useEmployee() {
         navigate("/employee/manage");
     };
     
-    return {users, handleAddNew, handleEdit, handleDelete, page, totalPages, handlePrevious, handleNext}
+    return {users, handleAddNew, handleEdit, handleDelete, page, totalPages, handlePrevious, handleNext};
 }
