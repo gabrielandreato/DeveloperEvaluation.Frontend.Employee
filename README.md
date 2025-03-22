@@ -67,6 +67,16 @@ These credentials should be set in the backend to ensure the frontend works prop
    ```bash
    yarn start
    ```
+   
+## Running with Docker
+
+### Prerequisites
+- Docker Desktop
+
+1. Building and executing containers;
+    ```bash
+    docker compose up --build -d
+   ```
 
 The app will be accessible at `http://localhost:3000`.
 
