@@ -6,32 +6,62 @@ import {GetListUserRequest} from "../interfaces/request/GetListUserRequest";
 import {CreateUserRequest} from "../interfaces/request/CreateUserRequest";
 
 
-const  categoriasService = {
+const  userService = {
     login:  async (credentials: LoginRequest) => {
-        const resposta = await instance.post('/User/Login', credentials);
-        return resposta.data;
+        try {
+            const resposta = await instance.post('/User/Login', credentials);
+            return resposta.data;
+        } catch (e: any) {
+            alert(`Error to login: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
 
     getListAsync:  async function getList(params: GetListUserRequest): Promise<PagedList<UserResponse>> {
-        const queryString = toQueryString(params);
-        const response = await instance.get(`/User/List?${queryString}`);
-        return response.data;
+        try {
+            const queryString = toQueryString(params);
+            const response = await instance.get(`/User/List?${queryString}`);
+            return response.data;
+        } catch (e: any) {
+            alert(`Error retrieving users: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
     createAsync : async (user: CreateUserRequest) => {
-        const response = await instance.post('/User/', user);
-        return response.data;
+        try {
+            const response = await instance.post('/User/', user);
+            return response.data;
+        } catch (e: any) {
+            alert(`Error creating user: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
     getAsync:  async function getAsync(id: number): Promise<UserResponse> {
-        const response = await instance.get(`/User/${id}`);
-        return response.data;
+        try {
+            const response = await instance.get(`/User/${id}`);
+            return response.data;
+        } catch (e: any) {
+            alert(`Error retrieving user: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
     updateAsync: async function updateAsync(id: string, user: CreateUserRequest) {
-        const response = await instance.put('/User/' + id, user);
-        return response.data;
+        try {
+            const response = await instance.put('/User/' + id, user);
+            return response.data;
+        } catch (e: any) {
+            alert(`Error updating user: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
     deleteUserAsync: async function deleteUser (id: number) {
+        try {
         const response = await instance.delete(`/User/${id}`);
         return response.data;
+        } catch (e: any) {
+            alert(`Error deleting user: ${e?.response?.data ?? 'backend not responding'}`);
+            throw e;
+        }
     },
 }
 
@@ -42,4 +72,4 @@ function toQueryString(params: Record<string, any>): string {
         .join('&');
 }
 
-export default categoriasService;
+export default userService;

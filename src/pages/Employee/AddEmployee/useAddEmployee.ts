@@ -1,10 +1,18 @@
 ﻿import {useEffect, useState} from "react";
 import {CreateUserRequest} from "../../../interfaces/request/CreateUserRequest";
 import {useNavigate, useParams} from "react-router-dom";
-import UserService from "../../../services/userService";
 import {CreatePhoneNumberRequest} from "../../../interfaces/request/CreatePhoneNumberRequest";
 import {UserResponse} from "../../../interfaces/response/UserResponse";
 import userService from "../../../services/userService";
+
+interface ApiError {
+    propertyName: string;
+    errorMessage: string;
+    attemptedValue?: any; 
+    customState?: any;    
+    severity?: number;
+    errorCode?: string;
+}
 
 export function useAddEmployee() {
     const [form, setForm] = useState<CreateUserRequest>({
@@ -30,7 +38,7 @@ export function useAddEmployee() {
         const fetchUser = async () => {
             if (id) {
                 try {
-                    const userData = await UserService.getAsync(parseInt(id));
+                    const userData = await userService.getAsync(parseInt(id));
                     if (userData) {
                         setForm({
                             userName: userData.userName,
@@ -85,18 +93,24 @@ export function useAddEmployee() {
         }));
     };
 
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         try {
             if (id === null || id === undefined) {
-                await UserService.createAsync(form);
+                await userService.createAsync(form);
                 navigate('/employee/manage');
             } else {
-                await UserService.updateAsync(id!, form);
+                await userService.updateAsync(id!, form);
                 navigate('/employee/manage');
             }
-        } catch (error) {
-            console.error("Error creating user:", error);
+        } catch (error: any) {
+            if (error.response && error.response.data && Array.isArray(error.response.data)) {
+                const messages = error.response.data.map((err: ApiError) => err.errorMessage);
+                setErrorMessages(messages);
+            } else {
+                setErrorMessages(["Unknown error occurred."]);
+            }
         }
     };
 
@@ -106,7 +120,7 @@ export function useAddEmployee() {
         const fetchManagers = async () => {
             try {
                 const response = await userService.getListAsync({})
-                setManagers(response.items);
+                setManagers(response?.items);
             } catch (e) {
                 
             }
@@ -126,7 +140,8 @@ export function useAddEmployee() {
         newPhoneNumber,
         setNewPhoneNumber,
         managers,
-        navigate
+        navigate,
+        errorMessages
     };
 
 }

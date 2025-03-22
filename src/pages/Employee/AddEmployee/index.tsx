@@ -13,13 +13,16 @@ export default function AddEmployee() {
         newPhoneNumber,
         setNewPhoneNumber,
          managers,
-        navigate
+        navigate,
+        errorMessages
     } = useAddEmployee();
 
     return (
         <div className={`${styles.container}`}>
             <h2 className={styles.mb4}>{id ? 'Edit Employee' : 'Add New Employee'}</h2>
             <form onSubmit={handleSubmit}>
+                
+                
                 <div className={styles.formGroup}>
                     <label htmlFor="userName">User Name</label>
                     <input
@@ -182,6 +185,18 @@ export default function AddEmployee() {
                         </tbody>
                     </table>
                 )}
+
+                <div>
+                    {errorMessages.length > 0 && (
+                        <ul className={styles.errorList}>
+                            {errorMessages.map((message, index) => (
+                                <li key={index} className={styles.errorMessage}>
+                                    {message}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
 
                 <button onClick={() => navigate('/employee/manage')} className={styles.btnCancel}>Cancel</button>
                 <button type="submit" className={styles.btn}>{id ? 'Update Employee' : 'Add Employee'}</button>

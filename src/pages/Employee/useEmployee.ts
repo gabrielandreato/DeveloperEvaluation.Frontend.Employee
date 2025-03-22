@@ -2,7 +2,6 @@
 import {useNavigate} from "react-router-dom";
 import {UserResponse} from "../../interfaces/response/UserResponse";
 import {PagedList} from "../../interfaces/types/PagedList";
-import categoriasService from "../../services/userService";
 import userService from "../../services/userService";
 
 export default function useEmployee() {
@@ -20,7 +19,7 @@ export default function useEmployee() {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            const response: PagedList<UserResponse> = await categoriasService.getListAsync({
+            const response: PagedList<UserResponse> | undefined = await userService.getListAsync({
                 page,
                 pageSize: users.pageSize
             });
@@ -45,7 +44,6 @@ export default function useEmployee() {
     const handleDelete = async (userId: number) => {
         await userService.deleteUserAsync(userId);
         setUsers({...users , items: users.items.filter(x => x.id !== userId)})
-        navigate("/employee/manage");
     };
 
     return {users, handleAddNew, handleEdit, handleDelete, handlePrevious, handleNext};
