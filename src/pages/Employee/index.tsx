@@ -2,7 +2,7 @@
 import useEmployee from "./useEmployee";
 
 export default function ManageEmployees() {
-    const {users, handleAddNew, handleEdit, handleDelete, page, totalPages, handlePrevious, handleNext} = useEmployee();
+    const {users, handleAddNew, handleEdit, handleDelete, handlePrevious, handleNext} = useEmployee();
     return (
         <div className={`${styles.container}`}>
             <div className={`${styles.dFlex} ${styles.justifyContentBetween}`}>

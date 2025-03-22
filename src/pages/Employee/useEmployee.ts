@@ -17,7 +17,6 @@ export default function useEmployee() {
 
     });
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -26,7 +25,6 @@ export default function useEmployee() {
                 pageSize: users.pageSize
             });
             setUsers(response);
-            setTotalPages(Math.ceil(response.totalCount / response.pageSize));
         };
         fetchUsers();
     }, [page]);
@@ -44,10 +42,11 @@ export default function useEmployee() {
         navigate("/employee/edit/" + userId);
     };
 
-    const handleDelete = (userId: number) => {
-        userService.deleteUserAsync(userId);
+    const handleDelete = async (userId: number) => {
+        await userService.deleteUserAsync(userId);
+        setUsers({...users , items: users.items.filter(x => x.id !== userId)})
         navigate("/employee/manage");
     };
 
-    return {users, handleAddNew, handleEdit, handleDelete, page, totalPages, handlePrevious, handleNext};
+    return {users, handleAddNew, handleEdit, handleDelete, handlePrevious, handleNext};
 }
